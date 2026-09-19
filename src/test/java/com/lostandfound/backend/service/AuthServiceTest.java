@@ -79,7 +79,7 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.register(registerRequest))
                 .isInstanceOf(BadRequestException.class)
-                .hasMessageContaining("already exists");
+                .hasMessageContaining("Este email já possui uma conta cadastrada");
 
         verify(userRepository, never()).save(any());
     }
