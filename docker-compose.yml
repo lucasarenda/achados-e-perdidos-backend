@@ -20,7 +20,7 @@ services:
 
   backend:
     build: .
-    container_name: lost-and-found-backend
+    container_name: achados-e-perdidos-backend
     depends_on:
       postgres:
         condition: service_healthy
