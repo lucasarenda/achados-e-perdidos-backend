@@ -67,6 +67,11 @@ public class ItemController {
         return ResponseEntity.ok(itemService.markAsResolved(id, authentication.getName()));
     }
 
+    @GetMapping("/{id}/images")
+    public ResponseEntity<List<String>> getImages(@PathVariable Long id) {
+        return ResponseEntity.ok(itemService.getImageUrls(id));
+    }
+
     @PostMapping(value = "/{id}/images", consumes = "multipart/form-data")
     public ResponseEntity<ItemResponse> addImage(@PathVariable Long id,
                                                   @RequestParam("file") MultipartFile file,

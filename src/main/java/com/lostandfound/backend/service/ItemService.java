@@ -163,6 +163,14 @@ public class ItemService {
         return toResponse(item);
     }
 
+    @Transactional(readOnly = true)
+    public List<String> getImageUrls(Long itemId) {
+        getItemOrThrow(itemId);
+        return itemImageRepository.findByItemId(itemId).stream()
+                .map(ItemImage::getUrl)
+                .toList();
+    }
+
     private Item getItemOrThrow(Long id) {
         return itemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item com o id: " + id + " não encontrado"));

@@ -1,12 +1,16 @@
 package com.lostandfound.backend.service;
 
 import com.lostandfound.backend.exception.BadRequestException;
+import com.lostandfound.backend.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -49,6 +53,26 @@ public class ImageStorageService {
         } catch (IOException e) {
             log.error("Falha ao armazenar a imagem", e);
             throw new BadRequestException("Falha ao armazenar a imagem");
+        }
+    }
+
+    public Resource load(String filename) {
+        try {
+            Path directory = Paths.get(uploadDir).toAbsolutePath().normalize();
+            Path file = directory.resolve(filename).normalize();
+
+            // impede path traversal (ex.: ../../etc/passwd)
+            if (!file.startsWith(directory)) {
+                throw new BadRequestException("Nome de arquivo inválido");
+            }
+
+            Resource resource = new UrlResource(file.toUri());
+            if (!resource.exists() || !resource.isReadable()) {
+                throw new ResourceNotFoundException("Imagem não encontrada");
+            }
+            return resource;
+        } catch (MalformedURLException e) {
+            throw new ResourceNotFoundException("Imagem não encontrada");
         }
     }
 

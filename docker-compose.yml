@@ -7,9 +7,7 @@ services:
     environment:
       POSTGRES_DB: lost_and_found
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -27,9 +25,10 @@ services:
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/lost_and_found
       DB_USERNAME: postgres
-      DB_PASSWORD: postgres
-      JWT_SECRET: change-this-super-secret-key-before-deploying-to-production-0123456789
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      JWT_SECRET: ${JWT_SECRET:-change-this-super-secret-key-before-deploying-to-production-0123456789}
       UPLOAD_DIR: /app/uploads
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-/api/v1/images}
     ports:
       - "8080:8080"
     volumes:
